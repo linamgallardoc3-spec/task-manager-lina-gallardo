@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>TO DO</title>
+</head>
+<body>
+
+    <div class="caja">
+        <h1>Lista de tareas</h1>
+        <div class="cajas">
+            <input type="text" name="tarea" id="inpTarea" placeholder="Ingresa una Tarea" required>
+            <select name="categorias" id="selCategoria">
+                <option value="">Seleccione una opción</option>
+            </select>
+            <input class="oculto" type="text" name="categoria" id="iCategoria">
+            <button class="oculto" type="button" id="btnCategoria">+</button>
+            <button clas= "boton" id= "agregar" type="button">agregar</button>
+        </div>
+        <div class="cajas" >
+            <ul id="mostrarLista">
+                
+            </ul>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
