@@ -7,22 +7,23 @@
     <title>TO DO</title>
 </head>
 <body>
-
+    <h1>Mi lista de tareas</h1>
     <div class="caja">
-        <h1>Lista de tareas</h1>
+        <h2>Agrega tareas a la lista</h2>
         <div class="cajas">
-            <input type="text" name="tarea" id="inpTarea" placeholder="Ingresa una Tarea" required>
+            <input type="text" name="tarea" id="inpTarea" placeholder="Ingresa una tarea">
             <select name="categorias" id="selCategoria">
-                <option value="">Seleccione una opción</option>
             </select>
-            <input class="oculto" type="text" name="categoria" id="iCategoria">
+            <samp class="oculto" id="mensaje"></samp>
+            <input class="oculto" type="text" name="categoria" id="iCategoria" placeholder="Nueva categoría">
             <button class="oculto" type="button" id="btnCategoria">+</button>
-            <button clas= "boton" id= "agregar" type="button">agregar</button>
+            <!-- <button id= "btnOcultar"onclick="ColocarOcultar()" class="oculto" type="button">-</button> -->
+            <button class= "btnBoton" id= "agregar" type="button">agregar</button>
         </div>
-        <div class="cajas" >
-            <ul id="mostrarLista">
-                
-            </ul>
+    </div>
+    <div class="caja">
+        <h2>Lista de tareas</h2>
+        <div class="cajas" id="tarjetas" >
         </div>
     </div>
     <script src="script.js"></script>

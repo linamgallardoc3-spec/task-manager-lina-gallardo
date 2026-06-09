@@ -9,22 +9,30 @@ class Tarea{
     constructor(tarea, categoria){
         this.tarea = tarea;
         this.categoria = categoria;
+        this.estado = '';
     };
     mostrar(){
-       // return 'la tarea'+ this.tarea+' con categoria '+this.categoria
-       
+        return this.tarea+' categoria '+this.categoria
+    };
+    mostrarEstado(){
+        return this.estado;
     }
-    agregar(objetoTarea){
-        listaTareas.push(objetoTarea);
+    cambiarEstado(estado){
+        this.estado = estado;
     }
+    // agregar(objetoTarea){
+    //     listaTareas.push(objetoTarea);
+    // }
 }
 //variables de HTML
+let divTarjetas = document.getElementById("tarjetas"); //tarjeta de tareas
 let btnAgregar = document.getElementById("agregar"); // Boton agregar elementos a la lista
 let btnAgregarCategoria = document.getElementById('btnCategoria');
 let inpTarea = document.getElementById("inpTarea");  // variable del input que agrega la tarea del usuario
 let sltCategoria = document.getElementById("selCategoria"); //variable del elemento selector de categorias
 let inpCategoria = document.getElementById("iCategoria"); //Variable del elemento input categoria nueva
 let ulLista = document.getElementById("mostrarLista");
+let msj = document.getElementById("mensaje");
 //valor inicial de input tarea
 document.activeElement
 
@@ -40,6 +48,7 @@ sltCategoria.addEventListener('change', function (evento) {
 
 btnAgregarCategoria.addEventListener('click', function() {
     agregarCategoria(inpCategoria.value);
+    inpCategoria.value = "";
 })
 
 //Boton que agrega las tareas en el array 
@@ -48,35 +57,35 @@ btnAgregar.addEventListener('click', function() {
     let strCategoria = sltCategoria.value;
     if(strTarea!="" && strCategoria!="" ){
         let objTarea = new Tarea(strTarea,strCategoria);
-        objTarea.agregar(objTarea);
-        console.log(listaTareas);
+        listaTareas.push(objTarea);
         MostarLista(listaTareas);
+        LimpiarElementos();
+        sltCategoria.selectedIndex = 0;
     }
-    // console.log(inpTarea.value);
-    // console.log(sltCategoria.value);
 })
 //Zona de funciones
 //Agegar elemento a la lista categoria
-function agregarCategoria(inpCategoria){
-    let elemento = inpCategoria.trim();
+function agregarCategoria(ipCategoria){
+    let elemento = ipCategoria.trim();
     if(typeof elemento === 'string' && elemento!="" && !categorias.includes(elemento)){
-        //categorias.push(elemento);
         categorias.splice(categorias.length-1,0,elemento);
         CrearOpciones(categorias);
-        //sltCategoria.insertAdjacentHTML('afterbegin', `<option value="${elemento}">${elemento}</option>`);
         sltCategoria.value = elemento;
         ColocarOcultar();
+        msj.classList.add('oculto');
+        msj.innerHTML='';
     }else{
         ColocarOcultar();
-        sltCategoria.value = elemento
-        sltCategoria.insertAdjacentHTML('afterend', `<p id="mensaje">${elemento} ya está en la lista</p>`)
+        sltCategoria.value = elemento;
+        msj.classList.remove('oculto');
+        msj.innerHTML=`${elemento} ya está en la lista`;
         console.log("No se puede ingresar")
     }
 }
 
 //Agregar la lista de opciones en HTML
 function CrearOpciones(categorias) {
-    sltCategoria.innerHTML = '';
+    sltCategoria.innerHTML = '<option value="">Seleccione una opción</option>';
     if(categorias.length != 0 ){
         for (const categoria of categorias) {
             sltCategoria.insertAdjacentHTML('beforeend', `<option value="${categoria}">${categoria}</option>`)
@@ -85,16 +94,27 @@ function CrearOpciones(categorias) {
 }
 
 function MostarLista(listaTareas) {
-    //if(listaTareas.length!=0){
-    ulLista.innerHTML = '';
-        for (const obj of listaTareas) {
-            for (const key in obj) {
-                ulLista.insertAdjacentHTML('beforeend', `<li>${obj[key]}  </li>`)
-                
-            }
-            
+    divTarjetas.innerHTML = '';
+
+    if(listaTareas.length != 0){
+        for (let i = 0; i < listaTareas.length; i++) {
+            let identificador = `tarea${i}`
+            console.log(listaTareas[i].mostrar());
+            divTarjetas.insertAdjacentHTML('beforeend',`
+            <div class="tarjeta" id="${identificador}">
+                <p class="contenido">
+                    ${listaTareas[i].mostrar()}
+                </p>
+                <div class="t-botones">
+                    <button onclick="TareaHecha(${identificador},${i})" class="btnBoton btnAgregar" type="button">Hecha</button>
+                    <button onclick="TareaUrgente(${identificador},${i})" class="btnBoton" type="button">Urgente</button>
+                    <button onclick="TareaEliminar(${i})" class="btnBoton" type="button">Eliminar</button>
+                </div>
+            </div>
+                `
+            );
         }
-    //}
+    }
 }
 
 
@@ -102,6 +122,7 @@ function MostarLista(listaTareas) {
 function removerOcultar(){
     inpCategoria.classList.remove('oculto');
     btnAgregarCategoria.classList.remove('oculto');
+    btnOcultar.classList.remove('oculto');
 }
 
 function ColocarOcultar(){
@@ -109,6 +130,31 @@ function ColocarOcultar(){
     btnAgregarCategoria.classList.add('oculto');
 }
 
-
 //llamamos a la funcion crearOpciones
 CrearOpciones(categorias);
+
+//Funcion limpiar elementos y contenido
+function LimpiarElementos() {
+    msj.innerHTML = '';
+    inpTarea.value = '';
+    inpCategoria.value = '';
+}
+
+//Botones de tarjetas
+function TareaHecha(tarj, posicion) {
+    listaTareas[posicion].cambiarEstado('Hecho');
+    tarj.classList.add('hecho');
+    tarj.classList.remove('urgente');
+}
+
+function TareaUrgente(tarj, posicion) {
+    listaTareas[posicion].cambiarEstado('Urgente');
+    tarj.classList.add('urgente');
+    tarj.classList.remove('hecho');
+}
+
+function TareaEliminar(posicion){
+    listaTareas.splice(posicion,1);
+    console.log(listaTareas);
+    MostarLista(listaTareas);
+}
